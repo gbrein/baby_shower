@@ -1,4 +1,4 @@
-**Wedding Website with gift shop and RSVP.**
+**Baby Shower with gift shop and RSVP.**
 
 - Payment with MercadoPago. 
 - Mongodb. 

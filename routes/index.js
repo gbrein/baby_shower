@@ -20,22 +20,22 @@ router.get("/", (req, res, next) => {
 
 router.post("/submit-code", (req, res, next) => {
   let { verificationCode } = req.body;
-  verificationCode === "guiekel1106"
+  verificationCode === "leoemel2020"
     ? (
-      res.cookie("validWeddingCode", "SKFAAOWR!@", {
+      res.cookie("validbabyshower", "SKFAAOWR!@", {
         maxAge: 900000,
         httpOnly: true
       })
 
     )
     : false;
-  (req.cookies.validWeddingCode === "SKFAAOWR!@") ?
+  (req.cookies.validbabyshower === "SKFAAOWR!@") ?
     res.redirect("index") : res.redirect("/")
 
 });
 
 router.get("/index", (req, res, next) => {
-  if (req.cookies["validWeddingCode"]) {
+  if (req.cookies["validbabyshower"]) {
     res.render("index2");
   } else {
     res.redirect("/");

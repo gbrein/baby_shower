@@ -13,7 +13,7 @@ mercadopago.configure({
 
 // /* GET home page */
 router.get("/", (req, res, next) => {
-  (req.cookies.validWeddingCode === "SKFAAOWR!@") ?
+  (req.cookies.validbabyshower === "SKFAAOWR!@") ?
     res.redirect("index") : res.render("index");
 
 });

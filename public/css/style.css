@@ -574,7 +574,7 @@ figure {
   color: #F69D9D !important;
 }
 
-#fh5co-couple,
+/* #fh5co-couple, */
 #fh5co-countdown,
 #fh5co-groom-bride,
 #fh5co-blog-section,
@@ -588,7 +588,7 @@ figure {
 
 @media screen and (max-width: 768px) {
 
-  #fh5co-couple,
+  /* #fh5co-couple, */
   #fh5co-countdown,
   #fh5co-groom-bride,
   #fh5co-blog-section,
@@ -624,10 +624,13 @@ figure {
   font-size: 18px;
 }
 
+#fh5co-couple {
+  padding-top: 3em;
+}
+
 #fh5co-couple img {
   position: relative;
   z-index: 10;
-  margin-bottom: 20px;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   -ms-border-radius: 50%;
@@ -1495,7 +1498,7 @@ figure {
 
 .img-circle {
   width: 70%;
-  height: auto;
+  height: 80%;
 }
 
 .row-text {

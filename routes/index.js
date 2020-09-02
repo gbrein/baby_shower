@@ -142,8 +142,8 @@ router.get("/pending", (req, res, next) => {
   res.render("pending");
 });
 
-router.get("/when-where", (req, res, next) => {
-  res.render("when-where");
+router.get("/our-history", (req, res, next) => {
+  res.render("our-history");
 });
 
 router.get("/gallery", (req, res, next) => {

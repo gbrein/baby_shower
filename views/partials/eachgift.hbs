@@ -1,7 +1,7 @@
 <div class="card card-custom">
   <img class="card-img-top" src="{{this.photo}}">
   <div class="card-body ">
-    <h4 class="card-title row-tables">{{this.name}}</h4>
+    <h4 class="card-title title-custom row-tables">{{this.name}}</h4>
     <p class="card-footer row-tables"><small class="text-muted"></small>R${{this.price}}</small></p>
     <form method="POST" class="row-tables" action='buy/{{this._id}}'>
       <input type="hidden" value="{{this._id}}" />

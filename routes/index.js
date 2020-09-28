@@ -4,92 +4,70 @@ const router = express.Router();
 const RsvpModel = require("../model/rsvpmodel");
 const MsgModel = require("../model/msgmodel");
 const StoreModel = require("../model/storeModel");
-const mercadopago = require('mercadopago');
-const uploadCloud = require('../config/cloudnary');
+const mercadopago = require("mercadopago");
+const uploadCloud = require("../config/cloudnary");
 
 mercadopago.configure({
-  access_token: process.env.MELI_TOKEN
+  access_token: process.env.MELI_TOKEN,
 });
 
-// /* GET home page */
 router.get("/", (req, res, next) => {
-  (req.cookies.validbabyshower === "SKFAAOWR!@") ?
-    res.redirect("index") : res.render("index");
-
-});
-
-router.post("/submit-code", (req, res, next) => {
-  let { verificationCode } = req.body;
-  verificationCode === "leoemel2020"
-    ? (
-      res.cookie("validbabyshower", "SKFAAOWR!@", {
-        maxAge: 900000,
-        httpOnly: true
-      })
-
-    )
-    : false;
-  (req.cookies.validbabyshower === "SKFAAOWR!@") ?
-    res.redirect("index") : res.redirect("/")
-
+  res.render("index2");
 });
 
 router.get("/index", (req, res, next) => {
-  if (req.cookies["validbabyshower"]) {
-    res.render("index2");
-  } else {
-    res.redirect("/");
-  }
+  res.render("index2");
 });
 
 router.get("/giftcreate", (req, res) => {
-  res.render("giftcreate")
-})
+  res.render("giftcreate");
+});
 
-router.post("/giftcreate", uploadCloud.single('photo'), (req, res) => {
+router.post("/giftcreate", uploadCloud.single("photo"), (req, res) => {
   const { title, price } = req.body;
-  console.log(req.file)
+  console.log(req.file);
   const photo = req.file.url;
   const imgName = req.file.originalname;
   const quote = 1;
-  const newGift = new StoreModel({ name: title, price, quote, photo, imgName })
-  newGift.save()
-    .then(gift => {
-      res.redirect('/giftcreated');
+  const newGift = new StoreModel({ name: title, price, quote, photo, imgName });
+  newGift
+    .save()
+    .then((gift) => {
+      res.redirect("/giftcreated");
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
-    })
-})
-
-router.get("/giftcreated", (req, res) => {
-  res.render("giftcreated")
-})
-
-router.get("/gifts", (req, res, next) => {
-  StoreModel.find().sort({ price: -1 }).then(gifts => {
-    res.render("gifts", {
-      title: "Gifts",
-      gifts: gifts,
     });
-  });
 });
 
+router.get("/giftcreated", (req, res) => {
+  res.render("giftcreated");
+});
+
+router.get("/gifts", (req, res, next) => {
+  StoreModel.find()
+    .sort({ price: -1 })
+    .then((gifts) => {
+      res.render("gifts", {
+        title: "Gifts",
+        gifts: gifts,
+      });
+    });
+});
 
 router.post("/buy/:_id", (req, res, next) => {
   const id = req.params._id;
-  StoreModel.findById({ _id: id }).then(gift => {
-    console.log(gift)
+  StoreModel.findById({ _id: id }).then((gift) => {
+    console.log(gift);
     if (!gift) {
-      alert('Produto não encontrado!')
-      res.render("gifts")
-    }
-    else {
+      alert("Produto não encontrado!");
+      res.render("gifts");
+    } else {
       let preference = {
         back_urls: {
-          "success": `https://casamentokelegui.com.br/sucess/${id}/`,
-          "failure": "https://casamentokelegui.com.br/failure",
-          "pending": "https://casamentokelegui.com.br/pending"
+          success: `https://casamentokelegui.com.br/sucess/${id}/`,
+          failure: "https://casamentokelegui.com.br/failure",
+          pending: "https://casamentokelegui.com.br/pending",
         },
         items: [
           {
@@ -97,26 +75,27 @@ router.post("/buy/:_id", (req, res, next) => {
             title: gift.name,
             unit_price: gift.price,
             quantity: 1,
-            currency_id: 'BRL'
-          }
-        ]
+            currency_id: "BRL",
+          },
+        ],
       };
 
-      mercadopago.preferences.create(preference)
+      mercadopago.preferences
+        .create(preference)
         .then(function (response) {
           // console.log(response)
           if (!response.response.init_point) {
-            res.redirect("/gifts")
+            res.redirect("/gifts");
           } else {
-            res.redirect(response.response.init_point)
+            res.redirect(response.response.init_point);
           }
-        }).catch(function (error) {
+        })
+        .catch(function (error) {
           console.log(error);
         });
     }
-  })
-})
-
+  });
+});
 
 router.get("/rsvp", (req, res, next) => {
   res.render("rsvp", { have_register: false });
@@ -127,11 +106,7 @@ router.get("/rsvpcreate", (req, res, next) => {
 });
 
 router.get("/sucess/:_id", (req, res, next) => {
-  const id = req.params._id;
-  console.log(id)
-  StoreModel.findById({ _id: id }).remove().then(result => {
-    res.render("sucess");
-  })
+  res.render("sucess");
 });
 
 router.get("/failure", (req, res, next) => {
@@ -156,66 +131,74 @@ router.get("/confirmation", (req, res, next) => {
 
 router.post("/rsvp", (req, res, next) => {
   let { names } = req.body;
-  const regData = new RegExp(names, "i")
-  RsvpModel.find({ names: { $regex: regData } }).then(users => {
+  const regData = new RegExp(names, "i");
+  RsvpModel.find({ names: { $regex: regData } }).then((users) => {
     if (users.length >= 1) {
-      res.render('rsvp', {
+      res.render("rsvp", {
         users: users,
         have_register: true,
       });
+    } else {
+      res.render("rsvp", { have_register: false });
     }
-    else {
-      res.render('rsvp', { have_register: false, });
-    }
-  })
-})
+  });
+});
 
 router.post("/rsvp/:_id", (req, res, next) => {
   const id = req.params._id;
-  RsvpModel.findByIdAndUpdate({ _id: id }, { confirmation: "true" }).then(result => {
-    res.render("sucessrsvp");
-  })
+  RsvpModel.findByIdAndUpdate({ _id: id }, { confirmation: "true" }).then(
+    (result) => {
+      res.render("sucessrsvp");
+    }
+  );
 });
 
 router.post("/rsvpcreate", (req, res, next) => {
   let { names, type_of_invitation } = req.body;
-  RsvpModel.findOne({ names: names[0] }).then(user => {
-    if (user) {
-      res.redirect("/confirmation");
-    } else {
-      if (typeof names === "string") {
-        new RsvpModel({
-          names: names,
-          type_of_invitation: type_of_invitation,
-          confirmation: "false"
-        })
-          .save()
-          .then(user => res.redirect("/rsvpcreated"));
+  RsvpModel.findOne({ names: names[0] })
+    .then((user) => {
+      if (user) {
+        res.redirect("/confirmation");
+      } else {
+        if (typeof names === "string") {
+          new RsvpModel({
+            names: names,
+            type_of_invitation: type_of_invitation,
+            confirmation: "false",
+          })
+            .save()
+            .then((user) => res.redirect("/rsvpcreated"));
+        }
+        res.redirect("/rsvpcreated");
       }
-      res.redirect("/rsvpcreated");
-    }
-  }).catch(err => console.log(err))
+    })
+    .catch((err) => console.log(err));
 });
 
 router.get("/rsvpcreated", (req, res) => {
-  res.render("rsvpcreated")
-})
+  res.render("rsvpcreated");
+});
 
 router.get("/hoteis", (req, res) => {
-  res.render("hoteis")
-})
+  res.render("hoteis");
+});
 
 router.post("/msgsucess", (req, res, next) => {
-  const { name, message } = req.body;
+  const { name, message, address } = req.body;
 
-  const newMsg = new MsgModel({ name: name, message: message })
-  newMsg.save()
-    .then(msg => {
-      res.render("msgsucess")
+  const newMsg = new MsgModel({
+    name: name,
+    message: message,
+    address: address,
+  });
+  newMsg
+    .save()
+    .then((msg) => {
+      res.render("msgsucess");
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
-    })
+    });
 });
 
 module.exports = router;

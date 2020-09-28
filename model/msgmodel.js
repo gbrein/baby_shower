@@ -6,6 +6,7 @@ const MsgModel = mongoose.model(
   new Schema({
     name: String,
     message: String,
+    address: String,
     updated: { type: Date, default: Date.now() },
   })
 );
